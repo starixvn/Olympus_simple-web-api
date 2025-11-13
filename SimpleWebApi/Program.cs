@@ -1,4 +1,6 @@
 
+using SimpleWebApi;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.

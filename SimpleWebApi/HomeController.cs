@@ -5,12 +5,20 @@ namespace SimpleWebApi;
 
 public class HomeController: Controller
 {
-    [HttpGet("/")]
-    [OutputCache(Duration = 3600)]
-    public IActionResult Get()
+    private static readonly HttpClient Client = new HttpClient
     {
-        var randomString = GetRandomString(100*1024);
-        return Ok(randomString);
+        BaseAddress = new Uri("http://nexcel_redmine_NEXAWS:9293")
+    };
+
+    [HttpGet("/")]
+    [OutputCache(NoStore = true)]
+    public async Task<IActionResult> Get()
+    {
+        var response = await Client.GetAsync("/stats");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        return Ok(content);
     }
 
     private string GetRandomString(int length)
